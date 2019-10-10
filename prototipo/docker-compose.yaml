@@ -1,0 +1,200 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+volumes:
+  orderer.prototipo.com:
+  peer0.org1.prototipo.com:
+  peer1.org1.prototipo.com:
+  peer0.org2.prototipo.com:
+  peer1.org2.prototipo.com:
+  peer0.org3.prototipo.com:
+  peer1.org3.prototipo.com:
+  peer0.org4.prototipo.com:
+  peer1.org4.prototipo.com:
+
+networks:
+  basic:
+  
+services:
+  ca1.prototipo.com:
+    image: hyperledger/fabric-ca
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca1.prototipo.com
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.prototipo.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/d8d7082624f74e76a5190172714408d1f1e78f86d1523b6fbbe5b7f03eaf0cfc_sk
+    ports:
+      - "7054:7054"
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org1.prototipo.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/d8d7082624f74e76a5190172714408d1f1e78f86d1523b6fbbe5b7f03eaf0cfc_sk -b admin:adminpw -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/org1.prototipo.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca1.prototipo.com
+    networks:
+      - basic
+
+  ca2.prototipo.com:
+    image: hyperledger/fabric-ca
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca2.prototipo.com
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org2.prototipo.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/379037634c03f4864a42a8533d28671b442289f6467c0604df549e6ea1beb7a4_sk
+    ports:
+      - "8054:7054"
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org2.prototipo.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/379037634c03f4864a42a8533d28671b442289f6467c0604df549e6ea1beb7a4_sk -b admin:adminpw -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/org2.prototipo.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca2.prototipo.com
+    networks:
+      - basic
+
+  ca3.prototipo.com:
+    image: hyperledger/fabric-ca
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca3.prototipo.com
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org3.prototipo.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/8650f2cbc0f4a5e444640c0c38b35adb93fbe05f9913cb5abca70711bbe66c28_sk
+    ports:
+      - "9054:7054"
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org3.prototipo.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/8650f2cbc0f4a5e444640c0c38b35adb93fbe05f9913cb5abca70711bbe66c28_sk -b admin:adminpw -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/org3.prototipo.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca3.prototipo.com
+    networks:
+      - basic
+
+  ca4.prototipo.com:
+    image: hyperledger/fabric-ca
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca4.prototipo.com
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org4.prototipo.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/8c891406339c6e43a4a4b123966007c0078ce00e5de99ed0c4bdae3220b7239f_sk
+    ports:
+      - "10054:7054"
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org4.prototipo.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/8c891406339c6e43a4a4b123966007c0078ce00e5de99ed0c4bdae3220b7239f_sk -b admin:adminpw -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/org4.prototipo.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca4.prototipo.com
+    networks:
+      - basic
+
+  orderer.prototipo.com:
+    extends:
+      file:   base/docker-compose-base.yaml
+      service: orderer.prototipo.com
+    container_name: orderer.prototipo.com
+    networks:
+      - basic
+
+  peer0.org1.prototipo.com:
+    container_name: peer0.org1.prototipo.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer0.org1.prototipo.com
+    networks:
+      - basic
+
+  peer1.org1.prototipo.com:
+    container_name: peer1.org1.prototipo.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer1.org1.prototipo.com
+    networks:
+      - basic
+
+  peer0.org2.prototipo.com:
+    container_name: peer0.org2.prototipo.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer0.org2.prototipo.com
+    networks:
+      - basic
+
+  peer1.org2.prototipo.com:
+    container_name: peer1.org2.prototipo.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer1.org2.prototipo.com
+    networks:
+      - basic
+
+  peer0.org3.prototipo.com:
+    container_name: peer0.org3.prototipo.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer0.org3.prototipo.com
+    networks:
+      - basic
+
+  peer1.org3.prototipo.com:
+    container_name: peer1.org3.prototipo.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer1.org3.prototipo.com
+    networks:
+      - basic
+
+  peer0.org4.prototipo.com:
+    container_name: peer0.org4.prototipo.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer0.org4.prototipo.com
+    networks:
+      - basic
+
+  peer1.org4.prototipo.com:
+    container_name: peer1.org4.prototipo.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer1.org4.prototipo.com
+    networks:
+      - basic
+
+  cli:
+    container_name: cli
+    image: hyperledger/fabric-tools
+    tty: true
+    stdin_open: true
+    environment:
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=cli
+      - CORE_PEER_ADDRESS=peer0.org1.prototipo.com:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.prototipo.com/peers/peer0.org1.prototipo.com/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.prototipo.com/peers/peer0.org1.prototipo.com/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.prototipo.com/peers/peer0.org1.prototipo.com/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.prototipo.com/users/Admin@org1.prototipo.com/msp
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: /bin/bash
+    volumes:
+        - /var/run/:/host/var/run/
+        - ./chaincode/:/opt/gopath/src/github.com/chaincode
+        - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+        - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+        - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
+    depends_on:
+      - orderer.prototipo.com
+      - peer0.org1.prototipo.com
+      - peer1.org1.prototipo.com
+      - peer0.org2.prototipo.com
+      - peer1.org2.prototipo.com
+      - peer0.org3.prototipo.com
+      - peer1.org3.prototipo.com
+      - peer0.org4.prototipo.com
+      - peer1.org4.prototipo.com
+    networks:
+      - basic
