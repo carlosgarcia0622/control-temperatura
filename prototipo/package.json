@@ -20,7 +20,7 @@
         "fabric-ca-client": "^1.4.4",
         "fabric-contract-api": "^1.4.1",
         "fabric-network": "^1.4.4",
-        "jsrsasign": "^8.0.12",
+        "jsrsasign": "^10.2.0",
         "pem": "^1.14.2",
         "sha256": "^0.2.0"
     },
